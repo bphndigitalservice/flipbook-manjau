@@ -64,6 +64,30 @@
         outline: 2px solid #fff;
         outline-offset: 3px;
       }
+
+      #fallback .fallback-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #fallback button.dismiss {
+        padding: 0.75rem 1.25rem;
+        border: 1px solid rgba(245, 245, 245, 0.5);
+        border-radius: 0.375rem;
+        background: transparent;
+        color: #f5f5f5;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      #fallback button.dismiss:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 3px;
+      }
     </style>
   </head>
   <body>
@@ -80,12 +104,17 @@
           Flipbook tidak bisa ditampilkan di halaman ini (kemungkinan situs BPHN
           memblokir embed). Buka langsung di tab baru:
         </p>
-        <a
-          href="https://laporan.bphn.go.id/bookcase/vspfe"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Buka di tab baru</a
-        >
+        <div class="fallback-actions">
+          <a
+            href="https://laporan.bphn.go.id/bookcase/vspfe"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Buka di tab baru</a
+          >
+          <button type="button" class="dismiss" id="fallback-dismiss">
+            Tutup
+          </button>
+        </div>
       </div>
     </div>
 
@@ -103,10 +132,19 @@
           fallback.classList.add("is-visible");
         }
 
+        function dismissFallback() {
+          fallback.classList.remove("is-visible");
+        }
+
         book.addEventListener("error", showFallback);
         book.addEventListener("load", function () {
           loaded = true;
+          dismissFallback();
         });
+
+        document
+          .getElementById("fallback-dismiss")
+          .addEventListener("click", dismissFallback);
 
         window.setTimeout(function () {
           if (!loaded) showFallback();
